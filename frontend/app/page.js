@@ -65,6 +65,7 @@ export default function Home() {
             <input
               type="text"
               name="name"
+              required
               placeholder="Enter employee name"
               className="w-full border border-gray-300 rounded-lg px-4 py-3
               outline-none transition
@@ -81,9 +82,10 @@ export default function Home() {
             <input
               type="email"
               name="email"
+              required
               placeholder="Enter employee email"
               className="w-full border border-gray-300 rounded-lg px-4 py-3
-              outline-none transition
+              outline-none transition 
               focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-500"
             />
           </div>
@@ -97,9 +99,10 @@ export default function Home() {
             <input
               type="password"
               name="password"
+              required
               placeholder="Enter password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3
-              outline-none transition
+              outline-none transition 
               focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-500"
             />
           </div>
@@ -126,7 +129,7 @@ export default function Home() {
           font-semibold text-center shadow-md
           hover:bg-blue-700 hover:shadow-lg
           active:scale-[0.98]
-          transition">
+          transition ">
           Employee Login
           </Link>
 

@@ -27,7 +27,7 @@ export default function Login() {
   });
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+      e.preventDefault();
     const formData = new FormData(e.target);
     const employeeData = {
       email: formData.get("email"),
@@ -66,10 +66,11 @@ export default function Login() {
               type="email"
               name="email"
               placeholder="Enter your email"
+              required
               className="w-full border border-gray-300 rounded-lg px-4 py-3
               outline-none transition
               focus:border-blue-500 focus:ring-2 focus:ring-blue-100
-              text-gray-600"
+              text-gray-600 "
             />
           </div>
 
@@ -83,10 +84,11 @@ export default function Login() {
               type="password"
               name="password"
               placeholder="Enter your password"
+              required
               className="w-full border border-gray-300 rounded-lg px-4 py-3
               outline-none transition
               focus:border-blue-500 focus:ring-2 focus:ring-blue-100
-              text-gray-500"
+              text-gray-500 :"
             />
           </div>
 
@@ -106,7 +108,9 @@ export default function Login() {
               : "Login"}
           </button>
 
-        </form>
+              </form>
+              
+
 
         {/* Success Message */}
         {mutation.isSuccess && (
