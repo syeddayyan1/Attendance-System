@@ -91,102 +91,49 @@ import { markAttendance } from "@/api/client/employee";
 
 export default function Attendance() {
   const scannerRef = useRef(null);
-  const scannerStarted = useRef(false);
+  const startedRef = useRef(false);
 
   const [scannedQR, setScannedQR] = useState("");
-  const [cameraError, setCameraError] = useState("");
-  const [scanning, setScanning] = useState(false);
 
   const mutation = useMutation({
     mutationFn: markAttendance,
-
-    onSuccess: (data) => {
-      console.log("Attendance:", data.message);
-    },
-
-    onError: (error) => {
-      console.log(
-        "Attendance Error:",
-        error.response?.data?.message || error.message
-      );
-    },
   });
 
   useEffect(() => {
-    const startCamera = async () => {
+    if (startedRef.current) return;
+
+    startedRef.current = true;
+
+    const startScanner = async () => {
       const token = localStorage.getItem("token");
 
-      if (!token) {
-        setCameraError("Please login first");
-        return;
-      }
+      if (!token) return;
 
-      if (scannerStarted.current) {
-        return;
-      }
+      const scanner = new Html5Qrcode("reader");
 
-      scannerStarted.current = true;
+      scannerRef.current = scanner;
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "environment",
+      await scanner.start(
+        { facingMode: "environment" },
+        {
+          fps: 10,
+          qrbox: {
+            width: 220,
+            height: 220,
           },
-        });
+        },
+        async (decodedText) => {
+          setScannedQR(decodedText);
 
-        stream.getTracks().forEach((track) => {
-          track.stop();
-        });
+          await scanner.stop();
+          scanner.clear();
 
-        const scanner = new Html5Qrcode("reader");
-
-        scannerRef.current = scanner;
-
-        await scanner.start(
-          {
-            facingMode: "environment",
-          },
-          {
-            fps: 10,
-            qrbox: {
-              width: 300,
-              height: 300,
-            },
-          },
-
-          async (decodedText) => {
-            console.log("QR DETECTED:", decodedText);
-
-            setScannedQR(decodedText);
-            setScanning(false);
-
-            try {
-              await scanner.stop();
-              scanner.clear();
-            } catch (error) {
-              console.log("Scanner already stopped");
-            }
-
-            mutation.mutate(token);
-          },
-
-          (errorMessage) => {
-            // Scanner continuously QR ko search karta rahega
-            console.log("Scanning...");
-          }
-        );
-
-        setScanning(true);
-      } catch (error) {
-        console.log("CAMERA ERROR:", error);
-
-        setCameraError(
-          `${error.name}: ${error.message || "Camera could not start"}`
-        );
-      }
+          mutation.mutate(token);
+        }
+      );
     };
 
-    startCamera();
+    startScanner();
 
     return () => {
       scannerRef.current = null;
@@ -198,6 +145,7 @@ export default function Attendance() {
 
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
 
+        {/* Heading */}
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">
             Employee Attendance
@@ -209,24 +157,12 @@ export default function Attendance() {
         </div>
 
         {/* Camera */}
-        <div
-          id="reader"
-          className="w-full overflow-hidden rounded-lg"
-        />
-
-        {/* Scanning Status */}
-        {scanning && (
-          <p className="mt-4 text-center text-blue-600 font-medium">
-            Camera is ready. Scan the QR code...
-          </p>
-        )}
-
-        {/* Camera Error */}
-        {cameraError && (
-          <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm text-center break-words">
-            {cameraError}
-          </div>
-        )}
+        <div className="flex justify-center">
+          <div
+            id="reader"
+            className="w-[280px] overflow-hidden rounded-xl border border-gray-200"
+          />
+        </div>
 
         {/* QR Detected */}
         {scannedQR && (
@@ -237,23 +173,23 @@ export default function Attendance() {
           </div>
         )}
 
-        {/* Attendance Success */}
+        {/* Success */}
         {mutation.isSuccess && (
-          <div className="mt-5 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm text-center">
+          <div className="mt-5 bg-green-50 border border-green-200 text-green-700
+          px-4 py-3 rounded-lg text-sm text-center">
             {mutation.data.message}
           </div>
         )}
 
-        {/* Attendance Error */}
+        {/* Error */}
         {mutation.isError && (
           <div className="mt-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm text-center">
             {mutation.error.response?.data?.message ||
-              mutation.error.message}
+              "Something went wrong"}
           </div>
         )}
 
       </div>
-
     </div>
   );
 }
