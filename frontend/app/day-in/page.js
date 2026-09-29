@@ -125,6 +125,13 @@ export default function Attendance() {
         async (decodedText) => {
           setScannedQR(decodedText);
 
+            // Sirf Day-In QR allow hoga
+          if (!decodedText.includes("/day-in")) {
+            setScannedQR("");
+            alert("Please scan the Day-In QR code");
+            return;
+          }
+
           await scanner.stop();
           scanner.clear();
 

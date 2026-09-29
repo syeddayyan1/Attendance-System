@@ -16,7 +16,7 @@ export default function Login() {
       localStorage.setItem("token", data.token);
       console.log("Login successful");
       // Login successful hone ke baad attendance page par redirect
-      router.push("/attendance");
+      router.push("/select");
     },
 
     onError: (error) => {

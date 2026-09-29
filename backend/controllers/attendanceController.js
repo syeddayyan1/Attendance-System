@@ -58,4 +58,68 @@ const markAttendance = async (req, res) => {
   }
 };
 
-module.exports = {markAttendance,};
+// Day Out
+const markDayOut = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+
+    const now = new Date();
+
+    const date = now.toISOString().split("T")[0];
+    const logoutTime = now.toTimeString().split(" ")[0];
+
+    const result = await pool.query(
+      `UPDATE attendance
+       SET logout_time = $1
+       WHERE employee_id = $2
+       AND date = $3
+       AND logout_time IS NULL
+       RETURNING *`,
+      [logoutTime, employeeId, date]
+    );
+
+   
+    if (result.rows.length === 0) {
+
+      const checkAttendance = await pool.query(
+        `SELECT logout_time
+         FROM attendance
+         WHERE employee_id = $1
+         AND date = $2`,
+        [employeeId, date]
+      );
+
+      // Aaj ki attendance hi nahi mili
+      if (checkAttendance.rows.length === 0) {
+        return res.status(404).json({
+          message: "Day In attendance not found for today",
+        });
+      }
+
+      // Attendance hai aur logout_time bhi already hai
+      if (checkAttendance.rows[0].logout_time) {
+        return res.status(400).json({
+          message: "Day-Out already marked for today",
+        });
+      }
+
+      return res.status(400).json({
+        message: "Day-Out could not be marked",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Day Out marked successfully",
+      logoutTime: result.rows[0].logout_time,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {markAttendance,markDayOut,};

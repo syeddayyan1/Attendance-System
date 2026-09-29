@@ -14,7 +14,20 @@ export const loginEmployee = async (employeeData) => {
 
 export const markAttendance = async (token) => {
   const response = await api.post(
-    "/attendance",{},
+    "/attendance/day-in",{},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const markDayOut = async (token) => {
+  const response = await api.post(
+    "/attendance/day-out",
+    {},
     {
       headers: {
         Authorization: `Bearer ${token}`,
