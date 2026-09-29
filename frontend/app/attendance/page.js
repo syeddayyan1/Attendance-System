@@ -160,7 +160,7 @@ export default function Attendance() {
         <div className="flex justify-center">
           <div
             id="reader"
-            className="w-[280px] overflow-hidden rounded-xl border border-gray-200"
+            className="w-[250px] overflow-hidden rounded-xl border border-gray-200"
           />
         </div>
 

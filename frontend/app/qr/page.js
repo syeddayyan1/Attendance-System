@@ -16,7 +16,6 @@ export default function QRPage() {
         size={350}
         bgColor="#ffffff"
         fgColor="#000000"
-        includeMargin={true}
       />
 
       <p className="mt-5 text-gray-600">

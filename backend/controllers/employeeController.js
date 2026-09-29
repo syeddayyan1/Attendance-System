@@ -44,6 +44,7 @@ const loginEmployee = async (req, res) => {
       [email]
     );
 
+    // Agar koi emoployee na hoo to employ not found error
     if (result.rows.length === 0) {
       return res.status(404).json({
         message: "Employee not found",
@@ -51,7 +52,6 @@ const loginEmployee = async (req, res) => {
     }
 
     const employee = result.rows[0];
-
     // Password check
     const isPasswordValid = await bcrypt.compare(
       password,employee.password

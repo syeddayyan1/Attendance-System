@@ -5,8 +5,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-pool
-  .connect()
+pool.connect()
   .then(() => {
     console.log("Database connected successfully");
   })

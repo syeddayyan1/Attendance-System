@@ -13,7 +13,7 @@ const sendEmail = async (to, name, password) => {
     from: process.env.EMAIL_USER,
     to,
     subject: "Your Employee Account",
-    text: `Hello ${name},
+    text: `Welcome ${name},
 
 Your employee account has been created.
 
