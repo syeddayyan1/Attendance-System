@@ -4,6 +4,7 @@ const sendEmail = require("../utils/sendEmail");
 const jwt = require("jsonwebtoken");
 
 
+// -----------Save Employee in Database---
 const addEmployee = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -32,7 +33,7 @@ const addEmployee = async (req, res) => {
 }
 };
 
-// For Email login 
+// ---------------- Employee login ----------------
 
 const loginEmployee = async (req, res) => {
   try {

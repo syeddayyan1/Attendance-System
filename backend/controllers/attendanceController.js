@@ -122,4 +122,33 @@ const markDayOut = async (req, res) => {
   }
 };
 
-module.exports = {markAttendance,markDayOut,};
+// get record
+
+const getRecord = async (req, res) => {
+  try {
+    const employeeId = req.user.id;
+
+    const result = await pool.query(
+      `SELECT * FROM attendance
+       WHERE employee_id = $1
+       AND date >= DATE_TRUNC('month', CURRENT_DATE)
+       AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
+       ORDER BY date ASC`,
+      [employeeId]
+    );
+
+    res.status(200).json(result.rows);
+  }
+  
+  catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+
+module.exports = {markAttendance,markDayOut,getRecord,};

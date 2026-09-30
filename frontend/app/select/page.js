@@ -44,6 +44,17 @@ export default function Login() {
           transition mt-2">
          Day Out
         </Link>
+              
+        <Link
+          href="/record"
+          className="block w-full bg-blue-600 text-white py-3 rounded-lg
+          font-semibold text-center shadow-md
+          hover:bg-blue-700 hover:shadow-lg
+          active:scale-[0.98]
+          transition mt-2">
+         Check Attendance Record
+        </Link>
+
       
       </div>
     </div>
