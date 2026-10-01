@@ -128,16 +128,23 @@ const getRecord = async (req, res) => {
   try {
     const employeeId = req.user.id;
 
-    const result = await pool.query(
+    // const result = await pool.query(
+    //   `SELECT * FROM attendance
+    //    WHERE employee_id = $1
+    //    AND date >= DATE_TRUNC('month', CURRENT_DATE)
+    //    AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
+    //    ORDER BY date ASC`,
+    //   [employeeId]
+    // );
+
+      const result = await pool.query(
       `SELECT * FROM attendance
        WHERE employee_id = $1
-       AND date >= DATE_TRUNC('month', CURRENT_DATE)
-       AND date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
-       ORDER BY date ASC`,
+       ORDER BY date DESC`,
       [employeeId]
-    );
+      );
 
-    res.status(200).json(result.rows);
+    res.status(200).json(result.rows);  
   }
   
   catch (error) {
