@@ -15,7 +15,7 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
-  res.send("API running");
+  res.send("API is running");
 });
 
 app.listen(5000, () => {
